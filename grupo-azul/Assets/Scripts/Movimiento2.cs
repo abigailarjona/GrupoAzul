@@ -18,8 +18,8 @@ public class Movimiento2 : MonoBehaviour
         characterController = GetComponent<CharacterController>();
 
         // Configurar la fricción en el Rigidbody para evitar el deslizamiento
-        rb.drag = 10f;         // Fricción lineal
-        rb.angularDrag = 10f;  // Fricción angular
+        //rb.drag = 10f;         // Fricción lineal
+        //rb.angularDrag = 10f;  // Fricción angular
     }
 
     void Update()
