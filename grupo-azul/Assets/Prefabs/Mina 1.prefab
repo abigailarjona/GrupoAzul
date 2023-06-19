@@ -186,7 +186,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: -0.65, y: -0.65, z: -1.34}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2193287051197040778
+--- !u!114 &3571365410789291978
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -195,10 +195,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2653646824231299267}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4673b8e6dcedb57408d2cd77f4f7b899, type: 3}
+  m_Script: {fileID: 11500000, guid: 860440daa9272fa428ce2914449b8749, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mina: {fileID: 7400497130711483212}
+  player: {fileID: 0}
+  cantidad: 0
+  damageTime: 0
 --- !u!1001 &6739840883061800283
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -209,7 +211,7 @@ PrefabInstance:
     - target: {fileID: 4268112259765943831, guid: 293ecd8d8f01b5448af9e2b03e48e737,
         type: 3}
       propertyPath: m_Name
-      value: Mina
+      value: Mina 1
       objectReference: {fileID: 0}
     - target: {fileID: 8668807050220221047, guid: 293ecd8d8f01b5448af9e2b03e48e737,
         type: 3}
