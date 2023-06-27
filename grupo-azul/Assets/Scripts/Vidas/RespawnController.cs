@@ -21,8 +21,7 @@ public class RespawnController : MonoBehaviour
     // Método para respawnear el objeto
     void Start()
     {
-         // Llamar al método Respawn después de un cierto tiempo
-    Invoke("Respawn", tiempoRespawn);
+  
         
     }
 
