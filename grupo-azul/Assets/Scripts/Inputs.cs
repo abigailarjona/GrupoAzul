@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using UnityEngine.Events;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -15,6 +17,21 @@ public class Inputs : MonoBehaviour
 
     [Header("Mouse Cursor Settings")] public bool cursorLocked = true;
     public bool cursorInputForLook = true;
+
+    [Header("UnityEvents")] public UnityEvent onPause;
+
+    public bool CursorLocked
+    {
+        get => cursorLocked;
+        set
+        {
+            cursorLocked = value;
+            cursorInputForLook = value;
+            SetCursorState(value);
+            look = Vector2.zero;
+        }
+    }
+
 
 #if ENABLE_INPUT_SYSTEM
     public void OnMove(InputValue value)
@@ -38,6 +55,11 @@ public class Inputs : MonoBehaviour
     public void OnSprint(InputValue value)
     {
         SprintInput(value.isPressed);
+    }
+
+    public void OnPause(InputValue value)
+    {
+        onPause.Invoke();
     }
 #endif
 
@@ -63,6 +85,11 @@ public class Inputs : MonoBehaviour
     }
 
     private void OnApplicationFocus(bool hasFocus)
+    {
+        SetCursorState(cursorLocked);
+    }
+
+    private void OnEnable()
     {
         SetCursorState(cursorLocked);
     }
