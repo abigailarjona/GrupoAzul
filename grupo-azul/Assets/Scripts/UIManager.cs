@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -10,27 +11,34 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKey(KeyCode.Escape) || Input.GetKey("p"))
         {
-            ActivarPausa();     // Activa el menú de pausa cuando se presiona la tecla Escape
-        }
-
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            DesactivarPausa();  // Desactiva el menú de pausa cuando se suelta la tecla Escape
+            ActivarPausa();     // Activa el menú de pausa cuando se presiona la tecla Escape o la tecla p
         }
     }
 
     public void ActivarPausa()
     {
+        Time.timeScale = 0; //Pone en pausa el juego
         menuPausa.SetActive(true);    // Activa el menú de pausa
     }
 
     public void DesactivarPausa()
     {
+        Time.timeScale = 1; //Reanuda el juego
         menuPausa.SetActive(false);   // Desactiva el menú de pausa
     }
 
+    public void Menu()
+    {
+        Time.timeScale = 1;//Activa la pantalla
+        SceneManager.LoadScene("MainMenu"); // Va al menu principal
+    }
+
+    public void Salir()
+    {
+        Application.Quit(); //Sale del juego
+    }
     public void ActivarMenuPerdiste()
     {
         menuPerdiste.SetActive(true); // Activa el menú de pérdida
