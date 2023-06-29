@@ -5,7 +5,7 @@ using UnityEngine;
 public class RespawnController : MonoBehaviour
 {
     // Referencia al script de la barra de vida
-    public BarraVIda barraVida;
+    public BarraVida barraVida;
 
     // Referencia al objeto que se va a respawnear
     public GameObject objetoARespawnear;
@@ -16,20 +16,16 @@ public class RespawnController : MonoBehaviour
     // Posición de respawn predefinida
     public Vector3 respawnPosition;
 
-    
 
     // Método para respawnear el objeto
-    void Start()
+    private void Start()
     {
-  
-        
     }
 
- 
-    public void Respawn()
+
+    public IEnumerator Respawn()
     {
         // Reproducir la animación de transición antes del respawn
-        
 
 
         // Restablecer la vida utilizando el método RestablecerVida del script de la barra de vida
@@ -38,19 +34,19 @@ public class RespawnController : MonoBehaviour
         // Desactivar el objeto
         objetoARespawnear.SetActive(false);
 
-        // Invocar el método de respawn después de un cierto tiempo
-        Invoke("ActivarObjeto", tiempoRespawn);
+        yield return new WaitForSeconds(tiempoRespawn);
 
         // Reposicionar el objeto a la posición de respawn predefinida
         objetoARespawnear.transform.position = respawnPosition;
+
+        // Invocar el método de respawn después de un cierto tiempo
+        ActivarObjeto();
     }
 
     // Método para activar el objeto después del tiempo de respawn
     private void ActivarObjeto()
     {
-         // Reactivar el objeto que contiene el script RespawnController
-    gameObject.SetActive(true);
-        
+        // Reactivar el objeto que contiene el script RespawnController
+        gameObject.SetActive(true);
     }
 }
-
