@@ -15,6 +15,7 @@ public class BarraVida : MonoBehaviour
     public RespawnController respawnController; // Referencia al script de RespawnController
     public float tiempoEspera = 3f; // Tiempo de espera antes de llamar al respawn
     [SerializeField] private Vector3 respawnPosition;
+    public PlayerController PlayerController;
 
     private bool _isAlive = true;
 
@@ -36,8 +37,7 @@ public class BarraVida : MonoBehaviour
     private void Update()
     {
         vidaActual =
-            Mathf.Clamp(vidaActual, 0,
-                vidaInicial); // Asegura que el valor de vida no sea menor que 0 ni mayor que el valor inicial
+            Mathf.Clamp(vidaActual, 0,vidaInicial); // Asegura que el valor de vida no sea menor que 0 ni mayor que el valor inicial
 
         barraDeVida.fillAmount = vidaActual / vidaInicial; // Actualiza la barra de vida de acuerdo al valor actual
 
@@ -45,6 +45,7 @@ public class BarraVida : MonoBehaviour
         {
             _isAlive = false;
             StartCoroutine(Die());
+            
         }
     }
 

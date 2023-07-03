@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -91,7 +91,14 @@ public class PlayerController : MonoBehaviour
     private int _animIDJump;
     private int _animIDFreeFall;
     private int _animIDMotionSpeed;
+    private int _animAim;
 
+    public bool shooting;
+    public bool hasPistol;
+
+    //Items
+    public PistolController pistol;
+ 
 #if ENABLE_INPUT_SYSTEM
     private PlayerInput _playerInput;
 #endif
@@ -135,6 +142,7 @@ public class PlayerController : MonoBehaviour
         _input = GetComponent<Inputs>();
 #if ENABLE_INPUT_SYSTEM
         _playerInput = GetComponent<PlayerInput>();
+        
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
@@ -149,12 +157,37 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         _hasAnimator = TryGetComponent(out _animator);
-
+        
+        ItemsControl();
         JumpAndGravity();
         GroundedCheck();
         Move();
+
+        //Shooting
+        shooting = Input.GetKeyDown(KeyCode.Mouse0);
     }
 
+     public void ItemsControl()
+    {
+      if(pistol != null)
+      {
+        if(shooting)
+        {
+            pistol.Shoot();
+        }
+      }
+      if (Input.GetKeyDown(KeyCode.Mouse1))
+      {
+      if(_hasAnimator)
+        {
+            _animator.SetBool(_animAim, true);
+        }
+      }
+      else if (Input.GetKeyUp(KeyCode.Mouse1))
+      {
+        _animator.SetBool(_animAim, false);
+      }
+    }
     private void LateUpdate()
     {
         CameraRotation();
@@ -167,6 +200,7 @@ public class PlayerController : MonoBehaviour
         _animIDJump = Animator.StringToHash("Jump");
         _animIDFreeFall = Animator.StringToHash("FreeFall");
         _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+        _animAim = Animator.StringToHash("Aim");
     }
 
     private void GroundedCheck()
@@ -340,6 +374,7 @@ public class PlayerController : MonoBehaviour
         {
             _verticalVelocity += Gravity * Time.deltaTime;
         }
+        
     }
 
     private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
@@ -384,4 +419,6 @@ public class PlayerController : MonoBehaviour
                 FootstepAudioVolume);
         }
     }
+
+   
 }
