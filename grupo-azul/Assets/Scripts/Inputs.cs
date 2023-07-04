@@ -12,6 +12,8 @@ public class Inputs : MonoBehaviour
     public Vector2 look;
     public bool jump;
     public bool sprint;
+    public bool aim;
+    public bool shoot;
 
     [Header("Movement Settings")] public bool analogMovement;
 
@@ -61,6 +63,16 @@ public class Inputs : MonoBehaviour
     {
         onPause.Invoke();
     }
+
+    public void OnAim(InputValue value)
+    {
+        AimInput(value.isPressed);
+    }
+
+    public void OnShoot(InputValue value)
+    {
+        ShootInput(value.isPressed);
+    }
 #endif
 
 
@@ -83,6 +95,17 @@ public class Inputs : MonoBehaviour
     {
         sprint = newSprintState;
     }
+
+    public void AimInput(bool newAimState)
+    {
+        aim = newAimState;
+    }
+
+    public void ShootInput(bool newShootState)
+    {
+        shoot = newShootState;
+    }
+
 
     private void OnApplicationFocus(bool hasFocus)
     {

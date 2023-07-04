@@ -10,6 +10,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 #if ENABLE_INPUT_SYSTEM
 [RequireComponent(typeof(PlayerInput))]
+[RequireComponent(typeof(PistolController))]
 #endif
 public class PlayerController : MonoBehaviour
 {
@@ -69,6 +70,8 @@ public class PlayerController : MonoBehaviour
     [Tooltip("For locking the camera position on all axis")]
     public bool LockCameraPosition = false;
 
+    [Tooltip("Aiming sight")] public Transform sight;
+
     // cinemachine
     private float _cinemachineTargetYaw;
     private float _cinemachineTargetPitch;
@@ -80,6 +83,7 @@ public class PlayerController : MonoBehaviour
     private float _rotationVelocity;
     private float _verticalVelocity;
     private float _terminalVelocity = 53.0f;
+    private bool _isAiming = false;
 
     // timeout deltatime
     private float _jumpTimeoutDelta;
@@ -98,7 +102,7 @@ public class PlayerController : MonoBehaviour
 
     //Items
     public PistolController pistol;
- 
+
 #if ENABLE_INPUT_SYSTEM
     private PlayerInput _playerInput;
 #endif
@@ -142,7 +146,7 @@ public class PlayerController : MonoBehaviour
         _input = GetComponent<Inputs>();
 #if ENABLE_INPUT_SYSTEM
         _playerInput = GetComponent<PlayerInput>();
-        
+
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
@@ -157,7 +161,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         _hasAnimator = TryGetComponent(out _animator);
-        
+
         ItemsControl();
         JumpAndGravity();
         GroundedCheck();
@@ -167,27 +171,27 @@ public class PlayerController : MonoBehaviour
         shooting = Input.GetKeyDown(KeyCode.Mouse0);
     }
 
-     public void ItemsControl()
+    private void ItemsControl()
     {
-      if(pistol != null)
-      {
-        if(shooting)
+        if (_input.shoot)
         {
-            pistol.Shoot();
+            StartCoroutine(pistol.Shoot());
         }
-      }
-      if (Input.GetKeyDown(KeyCode.Mouse1))
-      {
-      if(_hasAnimator)
+
+        if (_input.aim && _hasAnimator)
         {
+            _isAiming = true;
+            sight.gameObject.SetActive(true);
             _animator.SetBool(_animAim, true);
         }
-      }
-      else if (Input.GetKeyUp(KeyCode.Mouse1))
-      {
-        _animator.SetBool(_animAim, false);
-      }
+        else
+        {
+            _isAiming = false;
+            sight.gameObject.SetActive(false);
+            _animator.SetBool(_animAim, false);
+        }
     }
+
     private void LateUpdate()
     {
         CameraRotation();
@@ -248,7 +252,7 @@ public class PlayerController : MonoBehaviour
 
         // note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
         // if there is no input, set the target speed to 0
-        if (_input.move == Vector2.zero) targetSpeed = 0.0f;
+        if (_input.move == Vector2.zero || _isAiming) targetSpeed = 0.0f;
 
         // a reference to the players current horizontal velocity
         float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
@@ -278,6 +282,7 @@ public class PlayerController : MonoBehaviour
 
         // normalise input direction
         Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
+        if (_isAiming) inputDirection = Vector3.zero;
 
         // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
         // if there is a move input rotate player when the player is moving
@@ -328,7 +333,7 @@ public class PlayerController : MonoBehaviour
             }
 
             // Jump
-            if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+            if (_input.jump && _jumpTimeoutDelta <= 0.0f && !_isAiming)
             {
                 // the square root of H * -2 * G = how much velocity needed to reach desired height
                 _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
@@ -374,7 +379,6 @@ public class PlayerController : MonoBehaviour
         {
             _verticalVelocity += Gravity * Time.deltaTime;
         }
-        
     }
 
     private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
@@ -419,6 +423,4 @@ public class PlayerController : MonoBehaviour
                 FootstepAudioVolume);
         }
     }
-
-   
 }

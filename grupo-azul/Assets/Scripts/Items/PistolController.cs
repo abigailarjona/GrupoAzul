@@ -7,32 +7,26 @@ public class PistolController : MonoBehaviour
     public Transform shootPoint;
 
     public Transform bulletPrefab;
-    //sight
-    Transform sight;
 
-    private void tart()
+    public IEnumerator Shoot()
     {
-        sight = GetComponentInChildren<Canvas>().transform;
-    }
-
-    public void Shoot()
-    {
-        Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
+        Transform bullet = Instantiate(bulletPrefab, shootPoint.position, shootPoint.rotation);
+        yield return new WaitForSeconds(5f);
+        Destroy(bullet);
     }
 
     public void DrawSight(Transform camera)
     {
         RaycastHit hit;
 
-        if(Physics.Raycast(camera.position, camera.forward, out hit))
+        if (Physics.Raycast(camera.position, camera.forward, out hit))
         {
             shootPoint.LookAt(hit.point);
         }
         else
         {
-            Vector3 end =camera.position + camera.forward;
+            Vector3 end = camera.position + camera.forward;
             shootPoint.LookAt(end);
         }
     }
-
 }

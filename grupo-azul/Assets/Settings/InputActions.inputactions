@@ -51,12 +51,21 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "aim",
-                    "type": "Button",
+                    "name": "Aim",
+                    "type": "PassThrough",
                     "id": "2b41219d-4c88-4fa6-90a0-2df099ee41ad",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
-                    "interactions": "Hold",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Shoot",
+                    "type": "PassThrough",
+                    "id": "976dec75-f435-4687-baf8-97aabe5fffb3",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
                     "initialStateCheck": false
                 }
             ],
@@ -263,10 +272,21 @@
                     "name": "",
                     "id": "1355da20-e6b3-4bd0-aeea-31921aecf6a5",
                     "path": "<Mouse>/rightButton",
-                    "interactions": "Hold",
+                    "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
-                    "action": "aim",
+                    "action": "Aim",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ecf19d42-0504-4830-aaf3-cbd1500a954a",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KeyboardMouse",
+                    "action": "Shoot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
