@@ -3,7 +3,20 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Componente
+  - componente1
+  - componente2
+  - componente3
+  - shippiece
+  - item-1
+  - item-2
+  - item-3
+  - DejarItem1
+  - DejarItem2
+  - DejarItem3
+  - motores
+  - spaceship
   layers:
   - Default
   - TransparentFX
