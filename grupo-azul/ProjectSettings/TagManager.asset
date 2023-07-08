@@ -5,14 +5,23 @@ TagManager:
   serializedVersion: 2
   tags:
   - CinemachineTarget
+  - item-3
+  - item-2
+  - item-1
+  - DejarItem2
+  - componente1
+  - DejarItem3
+  - componente2
+  - componente3
+  - DejarItem1
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - NPC
+  - NpcController
   - 
   - 
   - 
