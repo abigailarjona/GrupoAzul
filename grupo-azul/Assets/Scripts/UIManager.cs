@@ -1,15 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using Player;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     public GameObject menuPausa; // Referencia al menú de pausa
+    public GameObject menuHasGanado; // Referencia al menú Has Ganado
     public GameObject menuPerdiste; // Referencia al menú de "perdiste"
-    public GameObject itemsUI; // Referencia a la interfaz de usuario de los items
+    public GameObject mostrarMensaje; // Referencia a la interfaz de usuario mostrar mensaje
     [SerializeField] private Inputs inputs;
 
     public void ActivarPausa()
@@ -42,13 +41,20 @@ public class UIManager : MonoBehaviour
         menuPerdiste.SetActive(true); // Activa el menú de pérdida
     }
 
-    public void ActivarMenuItems()
+    public void ActivarMenuHasGanado()
     {
-        itemsUI.SetActive(true); // Activa la interfaz de usuario de los items
+        menuHasGanado.SetActive(true);
     }
 
-    public void DesactivarMenuItems()
+    public void ActivarMostrarMensaje(string mensaje)
     {
-        itemsUI.SetActive(false); // Desactiva la interfaz de usuario de los items
+        Text msg = mostrarMensaje.GetComponentsInChildren<Text>()[0];
+        msg.text = mensaje;
+        mostrarMensaje.SetActive(true); // Activa la interfaz de usuario para mostrar el mensaje
+    }
+
+    public void DesactivarMostrarMensaje()
+    {
+        mostrarMensaje.SetActive(false); // Desactiva la interfaz de usuario de los items
     }
 }

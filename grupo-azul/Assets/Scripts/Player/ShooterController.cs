@@ -18,19 +18,18 @@ namespace Player
     {
         [SerializeField] private CinemachineVirtualCamera aimVirtualCamera;
         [SerializeField] private LayerMask aimColliderMask;
-
-        [FormerlySerializedAs("debugCrosshair")] [SerializeField]
-        private Transform aimTarget;
-
+        [SerializeField] private Transform aimTarget;
         [SerializeField] private AudioClip shootAudioClip;
         [SerializeField] private AudioClip[] bulletHitAudioClips;
         [SerializeField] private TrailRenderer bullet;
+        [SerializeField] private ParticleSystem bulletSmoke;
         [SerializeField] private Transform bulletSpawnPoint;
         [SerializeField] private Rig rig;
         [SerializeField] private Transform crosshair;
         [SerializeField] private TextMeshProUGUI ammoCountText;
         [SerializeField] private int maxAmmoCount = 12;
         [SerializeField] private float reloadTime = 3f;
+        [SerializeField] private int attackDamage = 10;
 
         private Animator _animator;
         private Inputs _playerInputs;
@@ -92,9 +91,19 @@ namespace Player
 
                     StartCoroutine(SoundManager.PlayClipAtPoint(shootAudioClip, transform.position));
                     _playerInputs.shoot = false;
-                    hit.transform.GetComponentInParent<IDamageable>()?.TakeDamage(transform, 25);
+
+                    IDamageable damageableTarget = hit.transform.GetComponentInParent<IDamageable>();
+                    if (damageableTarget != null)
+                    {
+                        if (hit.transform.TryGetComponent<Head>(out _))
+                            damageableTarget.TakeDamage(transform, attackDamage * 3);
+                        else
+                            damageableTarget.TakeDamage(transform, attackDamage);
+                    }
+
+                    // Agregar fuerza de impacto al objeto disparado
                     if (hit.collider.TryGetComponent<Rigidbody>(out Rigidbody target))
-                        target.AddForceAtPosition(ray.direction * 500f, hit.point);
+                        target.AddForceAtPosition(ray.direction * 4000f, hit.point);
 
                     int index = Random.Range(0, bulletHitAudioClips.Length);
                     StartCoroutine(SoundManager.PlayClipAtPoint(bulletHitAudioClips[index], hit.point));
@@ -103,7 +112,6 @@ namespace Player
                     ammoCountText.text = $"{_currentAmmoCount} / {maxAmmoCount}";
                     if (_currentAmmoCount <= 0)
                     {
-                        _canShoot = false;
                         StartCoroutine(Reload());
                     }
                 }
@@ -127,6 +135,7 @@ namespace Player
 
         private IEnumerator Reload()
         {
+            _canShoot = false;
             ammoCountText.text = $"Reloading...";
             yield return new WaitForSeconds(reloadTime);
             _currentAmmoCount = maxAmmoCount;
@@ -148,6 +157,8 @@ namespace Player
             }
 
             Destroy(bulletTrail.gameObject);
+
+            Instantiate(bulletSmoke, raycastHit.point, Quaternion.Euler(raycastHit.normal));
         }
     }
 }

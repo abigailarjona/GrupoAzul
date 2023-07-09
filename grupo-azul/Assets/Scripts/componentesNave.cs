@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class componenteNave : MonoBehaviour
+public class ComponentesNave : MonoBehaviour
 {
     public UIManager manager;
     public Transform posicionAparecerItem1;
@@ -21,12 +21,12 @@ public class componenteNave : MonoBehaviour
     public GameObject item6;
     public GameObject item7;
 
-    private bool rangoitem1 = false; // Indica si el jugador está dentro del rango de interacción
-    private bool rangoitem2 = false; // Indica si el jugador está dentro del rango de interacción
-    private bool rangoitem3 = false; // Indica si el jugador está dentro del rango de interacción
-    private bool parte1 = false;
-    private bool parte2 = false;
-    private bool parte3 = false;
+    public bool rangoitem1 = false; // Indica si el jugador está dentro del rango de interacción
+    public bool rangoitem2 = false; // Indica si el jugador está dentro del rango de interacción
+    public bool rangoitem3 = false; // Indica si el jugador está dentro del rango de interacción
+    public bool parte1 = false;
+    public bool parte2 = false;
+    public bool parte3 = false;
 
     void Update()
     {
@@ -112,7 +112,7 @@ public class componenteNave : MonoBehaviour
             if (agarreItem1)
             {
                 rangoitem1 = true; // Indica que el jugador está en rango de interacción
-                manager.ActivarMenuItems();
+                manager.ActivarMostrarMensaje("Presiona \"E\" para dejar los objetos");
                 Debug.Log("DejarItem 1");
 
                 // }
@@ -124,7 +124,7 @@ public class componenteNave : MonoBehaviour
             if (agarreItem2)
             {
                 rangoitem2 = true; // Indica que el jugador está en rango de interacción
-                manager.ActivarMenuItems();
+                manager.ActivarMostrarMensaje("Presiona \"E\" para dejar los objetos");
                 Debug.Log("DejarItem 2");
             }
         }
@@ -134,7 +134,7 @@ public class componenteNave : MonoBehaviour
             if (agarreItem3)
             {
                 rangoitem3 = true; // Indica que el jugador está en rango de interacción
-                manager.ActivarMenuItems();
+                manager.ActivarMostrarMensaje("Presiona \"E\" para dejar los objetos");
                 Debug.Log("DejarItem 3");
             }
         }
@@ -145,19 +145,19 @@ public class componenteNave : MonoBehaviour
     {
         if (col.transform.CompareTag("DejarItem1"))
         {
-            manager.DesactivarMenuItems(); // Desactiva la interfaz de usuario de los ítems si sale del rango
+            manager.DesactivarMostrarMensaje(); // Desactiva la interfaz de usuario de los ítems si sale del rango
             rangoitem1 = false; // Indica que el jugador está en rango de interacción
         }
 
         if (col.transform.CompareTag("DejarItem2"))
         {
-            manager.DesactivarMenuItems(); // Desactiva la interfaz de usuario de los ítems si sale del rango
+            manager.DesactivarMostrarMensaje(); // Desactiva la interfaz de usuario de los ítems si sale del rango
             rangoitem2 = false; // Indica que el jugador está en rango de interacción
         }
 
         if (col.transform.CompareTag("DejarItem3"))
         {
-            manager.DesactivarMenuItems(); // Desactiva la interfaz de usuario de los ítems si sale del rango
+            manager.DesactivarMostrarMensaje(); // Desactiva la interfaz de usuario de los ítems si sale del rango
             rangoitem3 = false; // Indica que el jugador está en rango de interacción
         }
     }

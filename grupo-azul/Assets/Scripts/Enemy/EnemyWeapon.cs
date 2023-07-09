@@ -10,6 +10,8 @@ namespace Enemy
     {
         [SerializeField] private Animator animator;
         [SerializeField] private AnimationClip attackAnimation;
+        [SerializeField] [Min(1f)] private float attackSpeed = 1f;
+        [SerializeField] [Min(1f)] private int attackDamage = 20;
 
         private bool _isPlayingAttackAnimation;
         private bool _canDamage;
@@ -25,7 +27,7 @@ namespace Enemy
         {
             if (!_canDamage || !IsPlayer(other)) return;
             if (!other.TryGetComponent<IDamageable>(out IDamageable damageableTarget)) return;
-            damageableTarget.TakeDamage(transform, 20);
+            damageableTarget.TakeDamage(transform, attackDamage);
             _canDamage = false;
         }
 
@@ -41,17 +43,21 @@ namespace Enemy
 
         private IEnumerator PlayAttackAnimation()
         {
-            const float attackAnimationOffset = 1.2f;
+            // A partir de que momento de la animación el collider puede hacer daño
+            float attackAnimationOffset = attackAnimation.length / 3f * attackSpeed;
+            animator.speed = attackSpeed;
             animator.SetTrigger(AttackTrigger);
             yield return new WaitForSeconds(attackAnimationOffset);
             _canDamage = true;
-            yield return new WaitForSeconds(attackAnimation.length);
+            yield return new WaitForSeconds(animator.GetCurrentAnimatorClipInfo(0)[0].clip.length -
+                                            attackAnimationOffset);
             _canDamage = false;
+            animator.speed = 1f;
         }
 
-        public float GetAttackAnimationLength()
+        public float GetAttackCooldown()
         {
-            return attackAnimation.length;
+            return attackAnimation.length * attackSpeed;
         }
     }
 }

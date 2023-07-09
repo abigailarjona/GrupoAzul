@@ -10,6 +10,7 @@ namespace HealthSystem
     [RequireComponent(typeof(PlayerController))]
     public class BarraVida : MonoBehaviour, IDamageable
     {
+        public UIManager uiManager; // Referencia al componente Image de la barra de vida
         public Image barraDeVida; // Referencia al componente Image de la barra de vida
         public float vidaInicial = 100f; // Valor inicial de la vida
         public float tiempoEspera = 3f; // Tiempo de espera antes de llamar al respawn
@@ -21,7 +22,7 @@ namespace HealthSystem
         private ShooterController _shooterController;
         private Animator _animator;
         private float _airTime; // Cantidad de tiempo en el aire
-        private const float FallDamage = 10f;
+        private const float FallDamage = 25f;
 
         private void Awake()
         {
@@ -79,9 +80,13 @@ namespace HealthSystem
             float animationLength = _animator.GetCurrentAnimatorStateInfo(0).length;
             yield return new WaitForSeconds(animationLength + tiempoEspera);
 
+            // Mostrar imagen Has muerto
+            uiManager.ActivarMenuPerdiste();
+            yield return new WaitForSeconds(tiempoEspera);
+
             // Esperar y recargar escena
             yield return new WaitForSeconds(tiempoEspera);
-            SceneManager.LoadScene("SampleScene");
+            SceneManager.LoadScene("Scenario1");
         }
 
         public void TakeDamage(Transform attacker, int damageTaken)

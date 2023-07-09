@@ -17,6 +17,7 @@ namespace Enemy
         [SerializeField] private EnemyWeapon weapon;
 
         private bool _isPlayingAudioClip;
+        private Collider _capsuleCollider;
         private Rigidbody[] _ragdollRigidBodies;
         private float _detectionCheckAt;
         private const float DetectionFrequency = 1f;
@@ -42,6 +43,7 @@ namespace Enemy
         {
             Animator = GetComponent<Animator>();
             NavMeshAgent = GetComponent<NavMeshAgent>();
+            _capsuleCollider = GetComponent<Collider>();
             _ragdollRigidBodies = GetComponentsInChildren<Rigidbody>();
 
             ToggleRagdollPhysics(false);
@@ -84,7 +86,8 @@ namespace Enemy
         public void OnHurt(Transform attacker)
         {
             Target = attacker;
-            ChangeState(AttackState);
+            if (_currentState != AttackState)
+                ChangeState(AttackState);
             StartCoroutine(PlaySound());
             _currentState?.UpdateState();
         }
@@ -94,6 +97,7 @@ namespace Enemy
         /// </summary>
         public void OnDeath()
         {
+            Destroy(_capsuleCollider);
             ToggleRagdollPhysics(true);
             audioSource.Stop();
             Destroy(this);
@@ -105,7 +109,7 @@ namespace Enemy
         public float OnAttack()
         {
             weapon.Attack();
-            return weapon.GetAttackAnimationLength() + .5f;
+            return weapon.GetAttackCooldown();
         }
 
         public void ChangeState(State newState)
