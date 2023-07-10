@@ -12,6 +12,7 @@ public class ComponentesNave : MonoBehaviour
     public bool agarreItem1;
     public bool agarreItem2;
     public bool agarreItem3;
+    
 
     public GameObject item1;
     public GameObject item2;
@@ -20,13 +21,14 @@ public class ComponentesNave : MonoBehaviour
     public GameObject item5;
     public GameObject item6;
     public GameObject item7;
-
+   
     public bool rangoitem1 = false; // Indica si el jugador está dentro del rango de interacción
     public bool rangoitem2 = false; // Indica si el jugador está dentro del rango de interacción
     public bool rangoitem3 = false; // Indica si el jugador está dentro del rango de interacción
     public bool parte1 = false;
     public bool parte2 = false;
     public bool parte3 = false;
+    public bool itempuerta = false;
 
     void Update()
     {
@@ -86,6 +88,7 @@ public class ComponentesNave : MonoBehaviour
         {
             Debug.Log("Has tomado el HUD de navegaciom");
             agarreItem1 = true;
+            itempuerta = true;
             item1 = col.gameObject;
             col.gameObject.SetActive(false);
         }
