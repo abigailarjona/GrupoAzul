@@ -1,11 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
  */
-
-
 namespace Player
 {
     [RequireComponent(typeof(CharacterController))]

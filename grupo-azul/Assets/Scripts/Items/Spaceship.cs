@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Items
 {
@@ -15,22 +14,17 @@ namespace Items
         private bool _fluxCondensor;
         private bool _iaNeuralInterface;
 
-        private bool _shouldStartFlying;
-
-        private void Update()
+        private void OnEnable()
         {
-            if (!_shouldStartFlying) return;
-
-            audioSource.Play();
-            exhaustL.SetActive(true);
-            exhaustR.SetActive(true);
-            animator.enabled = true;
-            _shouldStartFlying = false;
-
-            gameManager.OnScenarioFinished();
+            SpaceshipPartContainer.onPartInstalled += InstallPart;
         }
 
-        public void InstallPart(SpaceshipPart.Id part)
+        private void OnDisable()
+        {
+            SpaceshipPartContainer.onPartInstalled -= InstallPart;
+        }
+
+        private void InstallPart(SpaceshipPart.Id part)
         {
             switch (part)
             {
@@ -53,7 +47,17 @@ namespace Items
         private void CheckIfCompleted()
         {
             if (_hudNavigator && _fluxCondensor && _iaNeuralInterface)
-                _shouldStartFlying = true;
+                StartFlying();
+        }
+
+        private void StartFlying()
+        {
+            audioSource.Play();
+            exhaustL.SetActive(true);
+            exhaustR.SetActive(true);
+            animator.enabled = true;
+
+            gameManager.OnScenarioFinished();
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using UnityEngine.Serialization;
+﻿using UnityEngine;
 
 namespace Items
 {
@@ -18,7 +16,7 @@ namespace Items
         private void OnTriggerEnter(Collider other)
         {
             if (!other.CompareTag("Player")) return;
-            if (!other.TryGetComponent<Inventory>(out Inventory inventory)) return;
+            if (!other.TryGetComponent(out Inventory inventory)) return;
             inventory.AddSpaceshipPart(id);
             gameObject.SetActive(false);
         }

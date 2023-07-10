@@ -8,14 +8,7 @@ namespace Items
         public bool HudNavigator { get; private set; }
         public bool FluxCondensor { get; private set; }
         public bool IaNeuralInterface { get; private set; }
-
-        public enum SpaceshipPartId
-        {
-            HudNavigator,
-            FluxCondensor,
-            IaNeuralInterface
-        }
-
+        
         public void Awake()
         {
             HudNavigator = false;

@@ -1334,7 +1334,7 @@ Transform:
   - {fileID: 9045607384666533343}
   - {fileID: 2180628250714704452}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2008048054367819905
 GameObject:
@@ -5549,7 +5549,7 @@ MonoBehaviour:
   CameraDistance: 4
   CameraCollisionFilter:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 193
   IgnoreTag: Player
   CameraRadius: 0.15
   DampingIntoCollision: 0

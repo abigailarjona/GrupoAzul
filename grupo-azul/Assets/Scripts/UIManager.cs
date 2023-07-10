@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using HealthSystem;
 using Player;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,6 +13,26 @@ public class UIManager : MonoBehaviour
     public GameObject menuPerdiste; // Referencia al menú de "perdiste"
     public GameObject mostrarMensaje; // Referencia a la interfaz de usuario mostrar mensaje
     [SerializeField] private Inputs inputs;
+    [SerializeField] private Image barraDeVida;
+
+    public static Action<string> onShowMessage;
+    public static Action onHideMessage;
+
+    public void OnEnable()
+    {
+        onShowMessage += ActivarMostrarMensaje;
+        onHideMessage += DesactivarMostrarMensaje;
+        BarraVida.onDeath += OnDeath;
+        BarraVida.onDamageReceived += OnDamageReceived;
+    }
+
+    public void OnDisable()
+    {
+        onShowMessage -= ActivarMostrarMensaje;
+        onHideMessage -= DesactivarMostrarMensaje;
+        BarraVida.onDeath -= OnDeath;
+        BarraVida.onDamageReceived -= OnDamageReceived;
+    }
 
     public void ActivarPausa()
     {
@@ -36,9 +59,25 @@ public class UIManager : MonoBehaviour
         Application.Quit(); //Sale del juego
     }
 
-    public void ActivarMenuPerdiste()
+    // Actualiza la barra de vida de acuerdo al valor actual
+    private void OnDamageReceived(float currentHealth, float maxHealth)
     {
+        barraDeVida.fillAmount = currentHealth / maxHealth;
+    }
+
+    private void OnDeath()
+    {
+        StartCoroutine(ActivarMenuPerdiste());
+    }
+
+    public IEnumerator ActivarMenuPerdiste()
+    {
+        // Mostrar imagen Has muerto
         menuPerdiste.SetActive(true); // Activa el menú de pérdida
+        yield return new WaitForSeconds(10f);
+
+        // Recargar escena
+        SceneManager.LoadScene("Scenario1");
     }
 
     public void ActivarMenuHasGanado()

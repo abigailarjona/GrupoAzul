@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
@@ -19,6 +20,8 @@ namespace Player
         [Header("Mouse Cursor Settings")] public bool cursorLocked = true;
         public bool cursorInputForLook = true;
 
+        public static Action onInteractInput;
+
         public bool CursorLocked
         {
             get => cursorLocked;
@@ -30,7 +33,6 @@ namespace Player
                 look = Vector2.zero;
             }
         }
-
 
 #if ENABLE_INPUT_SYSTEM
         public void OnMove(InputAction.CallbackContext context)
@@ -64,6 +66,12 @@ namespace Player
         public void OnShoot(InputAction.CallbackContext context)
         {
             ShootInput(context.action.IsPressed());
+        }
+
+        public void OnInteract(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                onInteractInput.Invoke();
         }
 #endif
 
