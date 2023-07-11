@@ -5007,7 +5007,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1
   uiManager: {fileID: 0}
-  intalledMaterial: {fileID: 2100000, guid: 18d275b075e7dea43b3a40efdf311681, type: 2}
+  installedMaterial: {fileID: 2100000, guid: 18d275b075e7dea43b3a40efdf311681, type: 2}
 --- !u!54 &3578307207172174969
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5156,7 +5156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   uiManager: {fileID: 0}
-  intalledMaterial: {fileID: 2100000, guid: 6e2c49d3adeb0f34bac9592fb37604d2, type: 2}
+  installedMaterial: {fileID: 2100000, guid: 6e2c49d3adeb0f34bac9592fb37604d2, type: 2}
 --- !u!54 &4318990778804169661
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5617,7 +5617,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 2
   uiManager: {fileID: 0}
-  intalledMaterial: {fileID: 2100000, guid: f69fd7f18b4f649458ffb643ea66c1f7, type: 2}
+  installedMaterial: {fileID: 2100000, guid: f69fd7f18b4f649458ffb643ea66c1f7, type: 2}
 --- !u!54 &4992177993858922708
 Rigidbody:
   m_ObjectHideFlags: 0

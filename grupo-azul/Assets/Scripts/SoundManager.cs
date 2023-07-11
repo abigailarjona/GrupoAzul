@@ -13,17 +13,19 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip uiOnClickSound;
     [SerializeField] private AudioSource ambientAudioSource;
     [SerializeField] private AudioClip[] ambientSounds;
+    [SerializeField] private AudioSource musicAudioSource;
+    [SerializeField] private AudioClip mainMenuMusic;
+    [SerializeField] private AudioSource sfxAudioSource;
     public static SoundManager Instance { get; private set; }
 
-    private static SoundManager instance;
-    private IEnumerator _playAmbientSounds;
+    private IEnumerator playMusicCoroutine;
+    private IEnumerator playAmbientSoundsCoroutine;
 
     private enum GameScene
     {
         MainMenu = 0,
-        Map1 = 1,
+        InGame = 1,
     }
-
 
     private void Awake()
     {
@@ -36,6 +38,9 @@ public class SoundManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(this);
         }
+
+        playMusicCoroutine = PlayMusic(mainMenuMusic);
+        playAmbientSoundsCoroutine = PlayAmbientSounds();
     }
 
     private void OnEnable()
@@ -45,18 +50,25 @@ public class SoundManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        StopAllCoroutines();
         switch ((GameScene)scene.buildIndex)
         {
             case GameScene.MainMenu:
-                StopCoroutine(PlayMainMenuMusic());
+                musicAudioSource.volume = 0.5f;
+                StartCoroutine(playMusicCoroutine);
                 break;
-            case GameScene.Map1:
-                StartCoroutine(PlayAmbientSounds());
+            case GameScene.InGame:
+                musicAudioSource.volume = 0.1f;
+                StartCoroutine(playAmbientSoundsCoroutine);
                 break;
             default:
                 return;
         }
+    }
+
+    private void StopAllAudio()
+    {
+        StopMusic();
+        StopAmbientSounds();
     }
 
     public void PlayUiOnHoverSound()
@@ -69,26 +81,45 @@ public class SoundManager : MonoBehaviour
         SoundManager.Instance.uiAudioSource.PlayOneShot(uiOnClickSound);
     }
 
-    public static IEnumerator PlayClipAtPoint(AudioClip audioClip, Vector3 position)
+    public void PlayOneShot(AudioClip audioClip)
     {
-        AudioSource.PlayClipAtPoint(audioClip, position);
-        yield return new WaitForSeconds(audioClip.length);
+        SoundManager.Instance.sfxAudioSource.PlayOneShot(audioClip);
     }
 
-    public static IEnumerator PlayMainMenuMusic()
+
+    private IEnumerator PlayMusic(AudioClip musicClip)
     {
-        yield return new WaitForSeconds(10f);
+        while (true)
+        {
+            SoundManager.Instance.musicAudioSource.clip = musicClip;
+            SoundManager.Instance.musicAudioSource.Play();
+            yield return new WaitForSeconds(musicClip.length);
+        }
+    }
+
+    private void StopMusic()
+    {
+        if (playMusicCoroutine != null)
+            StopCoroutine(playMusicCoroutine);
+        musicAudioSource.Stop();
     }
 
     private IEnumerator PlayAmbientSounds()
     {
-        if (ambientSounds.Length < 1) yield break;
+        if (SoundManager.Instance.ambientSounds.Length < 1) yield break;
         while (true)
         {
-            int index = Random.Range(0, ambientSounds.Length);
-            ambientAudioSource.clip = ambientSounds[index];
-            ambientAudioSource.Play();
-            yield return new WaitForSeconds(ambientSounds[index].length);
+            int index = Random.Range(0, SoundManager.Instance.ambientSounds.Length);
+            SoundManager.Instance.ambientAudioSource.clip = ambientSounds[index];
+            SoundManager.Instance.ambientAudioSource.Play();
+            yield return new WaitForSeconds(SoundManager.Instance.ambientSounds[index].length);
         }
+    }
+
+    private void StopAmbientSounds()
+    {
+        if (playAmbientSoundsCoroutine != null)
+            StopCoroutine(playAmbientSoundsCoroutine);
+        ambientAudioSource.Stop();
     }
 }

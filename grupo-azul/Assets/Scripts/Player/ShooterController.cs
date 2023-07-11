@@ -30,6 +30,7 @@ namespace Player
         [SerializeField] private int maxAmmoCount = 12;
         [SerializeField] private float reloadTime = 3f;
         [SerializeField] private int attackDamage = 10;
+        [SerializeField] private AudioClip reloadSound;
 
         private Animator _animator;
         private Inputs _playerInputs;
@@ -89,7 +90,7 @@ namespace Player
                 {
                     StartCoroutine(SpawnBullet(hit));
 
-                    StartCoroutine(SoundManager.PlayClipAtPoint(shootAudioClip, transform.position));
+                    AudioSource.PlayClipAtPoint(shootAudioClip, transform.position);
                     _playerInputs.shoot = false;
 
                     IDamageable damageableTarget = hit.transform.GetComponentInParent<IDamageable>();
@@ -106,7 +107,7 @@ namespace Player
                         target.AddForceAtPosition(ray.direction * 4000f, hit.point);
 
                     int index = Random.Range(0, bulletHitAudioClips.Length);
-                    StartCoroutine(SoundManager.PlayClipAtPoint(bulletHitAudioClips[index], hit.point));
+                    AudioSource.PlayClipAtPoint(bulletHitAudioClips[index], hit.point, 0.1f);
 
                     _currentAmmoCount -= 1;
                     ammoCountText.text = $"{_currentAmmoCount} / {maxAmmoCount}";
@@ -136,6 +137,8 @@ namespace Player
         private IEnumerator Reload()
         {
             _canShoot = false;
+            yield return new WaitForSeconds(1f);
+            SoundManager.Instance.PlayOneShot(reloadSound);
             ammoCountText.text = $"Reloading...";
             yield return new WaitForSeconds(reloadTime);
             _currentAmmoCount = maxAmmoCount;

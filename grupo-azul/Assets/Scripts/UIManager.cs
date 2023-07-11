@@ -9,29 +9,30 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public GameObject menuPausa; // Referencia al menú de pausa
+    public GameObject menuPrimeraParteSuperada; // Referencia al menú de primara parte completada
     public GameObject menuHasGanado; // Referencia al menú Has Ganado
     public GameObject menuPerdiste; // Referencia al menú de "perdiste"
     public GameObject mostrarMensaje; // Referencia a la interfaz de usuario mostrar mensaje
     [SerializeField] private Inputs inputs;
     [SerializeField] private Image barraDeVida;
 
-    public static Action<string> onShowMessage;
-    public static Action onHideMessage;
+    public static Action<string> ShowMessage;
+    public static Action HideMessage;
 
     public void OnEnable()
     {
-        onShowMessage += ActivarMostrarMensaje;
-        onHideMessage += DesactivarMostrarMensaje;
-        BarraVida.onDeath += OnDeath;
-        BarraVida.onDamageReceived += OnDamageReceived;
+        ShowMessage += UIManager_MostrarMensaje;
+        HideMessage += UIManager_OcultarMensaje;
+        BarraVida.OnDeath += BarraVida_OnDeath;
+        BarraVida.OnDamageReceived += BarrarVida_OnDamageReceived;
     }
 
     public void OnDisable()
     {
-        onShowMessage -= ActivarMostrarMensaje;
-        onHideMessage -= DesactivarMostrarMensaje;
-        BarraVida.onDeath -= OnDeath;
-        BarraVida.onDamageReceived -= OnDamageReceived;
+        ShowMessage -= UIManager_MostrarMensaje;
+        HideMessage -= UIManager_OcultarMensaje;
+        BarraVida.OnDeath -= BarraVida_OnDeath;
+        BarraVida.OnDamageReceived -= BarrarVida_OnDamageReceived;
     }
 
     public void ActivarPausa()
@@ -60,40 +61,46 @@ public class UIManager : MonoBehaviour
     }
 
     // Actualiza la barra de vida de acuerdo al valor actual
-    private void OnDamageReceived(float currentHealth, float maxHealth)
+    private void BarrarVida_OnDamageReceived(float currentHealth, float maxHealth)
     {
         barraDeVida.fillAmount = currentHealth / maxHealth;
     }
 
-    private void OnDeath()
+    private void BarraVida_OnDeath()
     {
-        StartCoroutine(ActivarMenuPerdiste());
+        StartCoroutine(MostrarPerdiste());
     }
 
-    public IEnumerator ActivarMenuPerdiste()
+    public IEnumerator MostrarPerdiste()
     {
         // Mostrar imagen Has muerto
-        menuPerdiste.SetActive(true); // Activa el menú de pérdida
+        menuPerdiste.SetActive(true);
         yield return new WaitForSeconds(10f);
 
         // Recargar escena
         SceneManager.LoadScene("Scenario1");
     }
 
-    public void ActivarMenuHasGanado()
+    public void ToggleFirstPartCompleted(bool value)
+    {
+        menuPrimeraParteSuperada.SetActive(value);
+    }
+
+
+    public void MostrarHasGanado()
     {
         menuHasGanado.SetActive(true);
     }
 
-    public void ActivarMostrarMensaje(string mensaje)
+    private void UIManager_MostrarMensaje(string mensaje)
     {
         Text msg = mostrarMensaje.GetComponentsInChildren<Text>()[0];
         msg.text = mensaje;
-        mostrarMensaje.SetActive(true); // Activa la interfaz de usuario para mostrar el mensaje
+        mostrarMensaje.SetActive(true);
     }
 
-    public void DesactivarMostrarMensaje()
+    private void UIManager_OcultarMensaje()
     {
-        mostrarMensaje.SetActive(false); // Desactiva la interfaz de usuario de los items
+        mostrarMensaje.SetActive(false);
     }
 }

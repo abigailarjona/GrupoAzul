@@ -20,7 +20,7 @@ namespace Player
         [Header("Mouse Cursor Settings")] public bool cursorLocked = true;
         public bool cursorInputForLook = true;
 
-        public static Action onInteractInput;
+        public static Action OnInteractInput;
 
         public bool CursorLocked
         {
@@ -71,7 +71,7 @@ namespace Player
         public void OnInteract(InputAction.CallbackContext context)
         {
             if (context.performed)
-                onInteractInput.Invoke();
+                OnInteractInput.Invoke();
         }
 #endif
 

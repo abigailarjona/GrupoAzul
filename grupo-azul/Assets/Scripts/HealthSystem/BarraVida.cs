@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using Player;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace HealthSystem
@@ -11,9 +13,9 @@ namespace HealthSystem
     [RequireComponent(typeof(PlayerController))]
     public class BarraVida : MonoBehaviour, IDamageable
     {
-        public Image barraDeVida; // Referencia al componente Image de la barra de vida
         public float vidaInicial = 100f; // Valor inicial de la vida
         public float tiempoEspera = 3f; // Tiempo de espera antes de llamar al respawn
+        [SerializeField] private PlayerInput playerInput;
 
         private float _vidaActual; // Valor actual de la vida
         private PlayerController _playerController;
@@ -22,8 +24,8 @@ namespace HealthSystem
         private float _airTime; // Cantidad de tiempo en el aire
         private const float FallDamage = 25f;
 
-        public static Action onDeath;
-        public static Action<float, float> onDamageReceived;
+        public static Action OnDeath;
+        public static Action<float, float> OnDamageReceived;
 
         private void Awake()
         {
@@ -61,24 +63,25 @@ namespace HealthSystem
         {
             // Desactivar componentes Controller del jugador
             _playerController.enabled = false;
-            _shooterController.enabled = false;
+            playerInput.enabled = false;
 
             // Reproducir y esperar a que termine la animación de muerte
             _animator.SetTrigger($"Dying");
             float animationLength = _animator.GetCurrentAnimatorStateInfo(0).length;
             yield return new WaitForSeconds(animationLength + tiempoEspera);
 
-            onDeath?.Invoke();
+            OnDeath?.Invoke();
         }
 
         public void TakeDamage(Transform attacker, int damageTaken)
         {
+            if (_vidaActual <= 0) return;
             _vidaActual -= damageTaken;
             _vidaActual =
                 Mathf.Clamp(_vidaActual, 0,
                     vidaInicial); // Asegura que el valor de vida no sea menor que 0 ni mayor que el valor inicial
 
-            onDamageReceived?.Invoke(_vidaActual, vidaInicial);
+            OnDamageReceived?.Invoke(_vidaActual, vidaInicial);
             CheckIfDead();
         }
 

@@ -1,53 +1,45 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Items
 {
     public class Spaceship : MonoBehaviour
     {
-        [SerializeField] private Scenario1Manager gameManager;
         [SerializeField] private Animator animator;
         [SerializeField] private AudioSource audioSource;
         [SerializeField] private GameObject exhaustL;
         [SerializeField] private GameObject exhaustR;
 
-        private bool _hudNavigator;
-        private bool _fluxCondensor;
-        private bool _iaNeuralInterface;
+        private readonly List<SpaceshipPart.Id> _installedParts = new List<SpaceshipPart.Id>();
 
         private void OnEnable()
         {
-            SpaceshipPartContainer.onPartInstalled += InstallPart;
+            SpaceshipPartContainer.OnSpaceshipPartInstalled += InstallPart;
         }
 
         private void OnDisable()
         {
-            SpaceshipPartContainer.onPartInstalled -= InstallPart;
+            SpaceshipPartContainer.OnSpaceshipPartInstalled -= InstallPart;
         }
 
         private void InstallPart(SpaceshipPart.Id part)
         {
-            switch (part)
-            {
-                case SpaceshipPart.Id.HudNavigator:
-                    _hudNavigator = true;
-                    break;
-                case SpaceshipPart.Id.FluxCondensor:
-                    _fluxCondensor = true;
-                    break;
-                case SpaceshipPart.Id.IaNeuralInterface:
-                    _iaNeuralInterface = true;
-                    break;
-                default:
-                    return;
-            }
-
+            _installedParts.Add(part);
             CheckIfCompleted();
         }
 
         private void CheckIfCompleted()
         {
-            if (_hudNavigator && _fluxCondensor && _iaNeuralInterface)
-                StartFlying();
+            switch (_installedParts.Count)
+            {
+                case 2:
+                    GameManager.OnFirstPartCompleted?.Invoke();
+                    break;
+                case 3:
+                    StartFlying();
+                    break;
+            }
         }
 
         private void StartFlying()
@@ -57,7 +49,8 @@ namespace Items
             exhaustR.SetActive(true);
             animator.enabled = true;
 
-            gameManager.OnScenarioFinished();
+            // Invocar el evento onSpaceShipFixed
+            GameManager.OnSecondPartCompleted?.Invoke();
         }
     }
 }
